@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 void type_prompt();
+char *getBeforeSpace(char *);
 
 #define TRUE 1
 
@@ -36,4 +37,16 @@ void type_prompt(){
   } else {
     perror("getcwd() error");
   }
+}
+
+char *getBeforeSpace(char *string) {
+  char *newString = malloc(strlen(string) + 1);
+  for (int i = 0; i < strlen(string); i++) {
+    if (string[i] == ' ') {
+      break;
+    } else {
+      newString[i] = string[i];
+    }
+  }
+  return newString;
 }
