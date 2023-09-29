@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 void type_prompt();
 char *getBeforeSpace(char *);
+void read_command(char *, char *);
 
 #define TRUE 1
 
@@ -49,4 +51,23 @@ char *getBeforeSpace(char *string) {
     }
   }
   return newString;
+}
+
+void read_command(char *command, char *parameters) {
+  char input[600];
+  fgets(input, sizeof(input), stdin);
+  char *newline = strchr(input, '\n');
+  if (newline != NULL) {
+    *newline = '\0'; // Remover a quebra de linha
+  }
+
+  char *firstSpace = strchr(input, ' ');
+
+  if (firstSpace != NULL) {
+    firstSpace[0] = '\0'; // Separar o comando dos parâmetros
+    strcpy(parameters, firstSpace + 1);
+  } else {
+    strcpy(parameters, ""); // Sem parâmetros
+  }
+  strcpy(command, input);
 }
