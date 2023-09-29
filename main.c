@@ -9,27 +9,45 @@ void read_command(char *, char *);
 
 #define TRUE 1
 
-int main(){
+int main() {
+  int status;
+  char command[600], parameters[600];
 
-    int status, res;
+  while (TRUE) {
+    type_prompt();
+    read_command(command, parameters);
 
-    while(TRUE){
-        type_prompt();
-        //read_command(command, parameters);
-        res = fork();
-        if(res != 0){
-            /*Codigo do processo pai.*/
-            //waitpid(-1, &status, 0);
-        } else {
-            /* Codigo do processo filho*/
-            //execve(command, paramenters, 0);
-        }
+    char *args[3];
+    args[0] = (char *)malloc(strlen(command) + 6);
+    if (args[0] == NULL) {
+      perror("malloc");
+      exit(EXIT_FAILURE);
+    }
+    strcpy(args[0], "/bin/");
+    strcat(args[0], command);
+    if (!strcmp(parameters, "")) {
+      args[1] = NULL;
+    } else {
+      int numParameters = 1;
+      char *token = strtok(parameters, " ");
+      while (token != NULL) {
+        args[numParameters] = token;
+        numParameters++;
+        token = strtok(NULL, " ");
+      }
+      args[numParameters] = NULL;
     }
 
-
-
-
-    return 0;
+    if (fork() != 0) {
+      /*Codigo do processo pai.*/
+      waitpid(-1, &status, 0);
+    } else {
+      char *envp[] = {"TERM=xterm", NULL};
+      execve(args[0], args, envp);
+      perror("execve");
+    }
+  }
+  return 0;
 }
 
 void type_prompt(){
