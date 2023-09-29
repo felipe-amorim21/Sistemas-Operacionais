@@ -87,5 +87,5 @@ void read_command(char *command, char *parameters) {
   } else {
     strcpy(parameters, ""); // Sem parâmetros
   }
-  strcpy(command, input);
+  strcpy(command, getBeforeSpace(input));
 }
